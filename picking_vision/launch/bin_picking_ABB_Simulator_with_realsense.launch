@@ -1,0 +1,39 @@
+<launch>
+   <!--  -->
+   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find picking_vision)/urdf/bin_picking_robot.urdf.xacro" />
+
+   <!-- send fake joint values -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+  <!-- Gui for joint contol -->
+  <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
+ -->
+  <!-- Combine joint values -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>  
+
+  <!-- 3D visualization -->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find picking_vision)/launch/picking.rviz"/>
+
+  <!-- RGB-D Camera -->
+  <arg name="camera"     default="camera"/>
+
+  <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+    <arg name="depth_width"       value="640"/>
+    <arg name="depth_height"      value="480"/>
+    <arg name="depth_fps"         value="30"/>
+    <arg name="color_width"       value="640"/>
+    <arg name="color_height"      value="480"/>
+    <arg name="color_fps"         value="30"/>
+    <arg name="enable_depth"      value="true"/>
+    <arg name="enable_color"      value="true"/>
+    <arg name="enable_infra1"     value="false"/>
+    <arg name="enable_infra2"     value="false"/>
+    <arg name="enable_fisheye"    value="false"/>
+    <arg name="enable_gyro"       value="false"/>
+    <arg name="enable_accel"      value="false"/>
+    <arg name="enable_pointcloud" value="true"/>
+    <arg name="enable_sync"       value="true"/>
+    <arg name="tf_prefix"         value="$(arg camera)"/>
+  </include>
+
+</launch>
